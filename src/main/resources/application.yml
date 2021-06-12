@@ -1,0 +1,6 @@
+server:
+  port: 9999
+
+# 图片文件夹路径
+folder:
+  path: ""
