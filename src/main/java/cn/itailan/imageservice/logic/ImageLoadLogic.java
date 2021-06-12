@@ -59,6 +59,7 @@ public class ImageLoadLogic {
             Random random = new Random();
             int index = random.nextInt(imagePaths.size() - 1);
             File file = new File(imagePaths.get(index));
+            log.info("图片名:{}", file.getName());
             FileInputStream inputStream;
             inputStream = new FileInputStream(file);
             byte[] bytes = new byte[inputStream.available()];
