@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -39,7 +40,7 @@ public class ImageLoadLogic {
         List<String> imageList = new ArrayList<>();
         try {
             File file = new File(filePath);
-            File[] files = file.listFiles(x -> imageExtension.contains(FilenameUtils.getExtension(x.getName())));
+            File[] files = file.listFiles(x -> x.getName().charAt(0)!= '.' && imageExtension.contains(FilenameUtils.getExtension(x.getName())));
             if (files != null) {
                 imageList = Arrays.stream(files).map(File::getPath).collect(Collectors.toList());
             }
@@ -47,6 +48,14 @@ public class ImageLoadLogic {
             log.warn("获取目录下图片列表失败", e);
         }
         return imageList;
+    }
+
+    /**
+     * 定时获取图片路径
+     */
+    @Scheduled(cron = "0 * * * *")
+    public void scheduGetImageList(){
+        imagePaths = getImagePathList();
     }
 
     /**
@@ -64,6 +73,7 @@ public class ImageLoadLogic {
             inputStream = new FileInputStream(file);
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, inputStream.available());
+            inputStream.close();
             return bytes;
         } catch (IOException e) {
             log.warn("获取图片失败", e);

@@ -1,6 +1,7 @@
 package cn.itailan.imageservice.service;
 
 import cn.itailan.imageservice.logic.ImageLoadLogic;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 获取随机图片
@@ -24,5 +27,14 @@ public class RandomImgService {
     @ResponseBody
     public byte[] getImage() {
       return imageLoadLogic.getRandomImage();
+    }
+
+    /**
+     * 重定向的形式，直接返回图片url
+     */
+    @ResponseBody
+    @GetMapping("getImageRedirect")
+    public void getImageRedirect(HttpServletResponse response) throws IOException {
+        response.sendRedirect("http://img.itailan.cn/Sakura.jpg");
     }
 }
