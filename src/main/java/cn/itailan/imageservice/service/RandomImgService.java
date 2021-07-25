@@ -1,7 +1,6 @@
 package cn.itailan.imageservice.service;
 
 import cn.itailan.imageservice.logic.ImageLoadLogic;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
