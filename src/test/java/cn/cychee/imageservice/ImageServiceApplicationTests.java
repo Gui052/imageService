@@ -1,4 +1,4 @@
-package cn.itailan.imageservice;
+package cn.cychee.imageservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

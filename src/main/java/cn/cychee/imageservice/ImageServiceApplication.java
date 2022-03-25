@@ -1,4 +1,4 @@
-package cn.itailan.imageservice;
+package cn.cychee.imageservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package cn.itailan.imageservice.logic;
+package cn.cychee.imageservice.logic;
 
 import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
