@@ -54,7 +54,7 @@ public class ImageLoadLogic {
      * 定时获取图片路径
      */
     @Scheduled(cron = "0 * * * *")
-    public void scheduGetImageList(){
+    public void scheduleGetImageList(){
         imagePaths = getImagePathList();
     }
 
