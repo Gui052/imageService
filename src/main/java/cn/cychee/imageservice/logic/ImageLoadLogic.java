@@ -53,7 +53,7 @@ public class ImageLoadLogic {
     /**
      * 定时获取图片路径
      */
-    @Scheduled(cron = "0 * * * *")
+    @Scheduled(cron = "*/5 * * * * ?")
     public void scheduleGetImageList(){
         imagePaths = getImagePathList();
     }
