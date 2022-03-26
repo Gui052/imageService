@@ -8,11 +8,11 @@
         <version>2.5.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>cn.itailan</groupId>
+    <groupId>cn.cychee</groupId>
     <artifactId>imageService</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>imageService</name>
-    <description>Demo project for Spring Boot</description>
+    <description>image service for blog</description>
     <properties>
         <java.version>11</java.version>
     </properties>
