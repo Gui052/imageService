@@ -9,10 +9,12 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -46,6 +49,9 @@ public class ImageLoadLogic {
 
     @Value("${scale:1}")
     private Float scale;
+
+    @Resource
+    private Executor saveFileThreadPool;
 
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.SECONDS)
@@ -94,17 +100,27 @@ public class ImageLoadLogic {
                 ResponseBody responseBody = response.body();
                 if (responseBody != null) {
                     byte[] bytes = responseBody.bytes();
-                    String result = ImageBase64Utils.bytesToBase64(bytes);
-                    //输出图片的路径
-                    String fileName = DigestUtils.md5Hex(result);
-                    if (filePath.charAt(filePath.length() - 1) != '/') {
-                        filePath += '/';
-                    }
-                    String fileOutPath = filePath + fileName + ".jpg";
-                    File file = new File(fileOutPath);
-                    if (!file.exists()) {
-                        ImageBase64Utils.base64ToImageFile(result, fileOutPath);
-                    }
+
+                    saveFileThreadPool.execute(() -> {
+                        String result = ImageBase64Utils.bytesToBase64(bytes);
+                        //输出图片的路径
+                        String fileName = DigestUtils.md5Hex(result);
+                        if (filePath.charAt(filePath.length() - 1) != '/') {
+                            filePath += '/';
+                        }
+                        String fileOutPath = filePath + fileName + ".jpg";
+                        File file = new File(fileOutPath);
+                        if (!file.exists()) {
+                            try {
+                                ImageBase64Utils.base64ToImageFile(result, fileOutPath);
+                            } catch (Exception e) {
+                                log.error("图片保存失败", e);
+                            }
+                        }
+                    });
+
+                    byte[] resByte = new byte[bytes.length];
+                    BeanUtils.copyProperties(bytes, resByte);
                     return compression(bytes);
                 }
             } catch (Exception e) {
